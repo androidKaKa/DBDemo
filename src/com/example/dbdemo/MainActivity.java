@@ -7,6 +7,7 @@ import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 import com.example.db.User;
+import com.example.dbdemo.ListAdapter.OnDataChange;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -27,23 +28,34 @@ public class MainActivity extends Activity {
 	
 	private List<Data> dataList = new ArrayList<Data>();
     private Button btnAdd=null;
-	private ListView listView=null;
+	private ListView listView=null; 
 	ListAdapter adapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		//initDatas();
+	 
+		  btnAdd=(Button)findViewById(R.id.btnAdd);
 		
-		btnAdd=(Button)findViewById(R.id.btnAdd);
 		 adapter=new ListAdapter(MainActivity.this, R.layout.list_item, dataList);
-		
+		 
+		 //适配器增加回调接口，如果数据有更新则重新刷新Listview。
+		 adapter.setOnDataChange(new OnDataChange() {
+			
+			@Override
+			public void onDataChange(List<User> allNews) {
+				// TODO Auto-generated method stub
+
+				initDatas(); 
+				listView.setAdapter(adapter);
+			}
+		});
+		 
 		listView=(ListView)findViewById(R.id.listView); 
-		
-		
+		 
 		SQLiteDatabase db = Connector.getDatabase();
 		 
- 
+	 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
